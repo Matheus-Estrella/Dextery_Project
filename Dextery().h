@@ -53,7 +53,6 @@ Resumo de funções apresentadas abaixo: Funções Universais Dextery()
  ----> Funções Principais:
  SetConfigs() = Seta configurações iniciais, tais como SetPurtugues
  CreateTxtFile = Cria um arquivo de texto com nome personalizável
- criarArquivoBinario = Cria um arquivo binário com nome personalizável
 
  ----> Funções Auxiliares:
   SetPurtuguese() = Configura opções em português para Dextery()
@@ -72,6 +71,25 @@ void SetConfigs(){
 void Warning(){
 	printf("\n\n\n----------  POR FAVOR DIGITE UMA OPÇÃO VÁLIDA DO MENU  ----------\n\n\n");
 }
+
+void CreateTxTFile() {
+	char Arqv_Name[50];
+    printf("Digite o nome do arquivo: ");
+    fflush(stdin);
+    fgets(Arqv_Name, sizeof(Arqv_Name), stdin);
+    Arqv_Name[strcspn(Arqv_Name, "\n")] = '\0'; // Para remover nova linha "\n" no nome do arquivo
+    
+    char filename_dottxt[54];
+    snprintf(filename_dottxt, sizeof(filename_dottxt), "%s.txt", Arqv_Name); // Para adicionar ".txt" ao nome personalizado
+
+    FILE* Arqv = fopen(filename_dottxt, "w");
+    if (Arqv == NULL) {
+        printf("\nErro ao criar arquivo\n");
+    } else {
+        fclose(Arqv);
+    }
+}
+
 /*
 Resumo de funções apresentadas abaixo: Manipulção de datas
 
@@ -422,6 +440,7 @@ int CallDextery(){ // EXECUTAR MENU DEXTERY
 		printf("\n 0- Sair");
 		printf("\n 1- Configurações Iniciais Dextery");
 		printf("\n 2- Realizar operações Matemáticas");
+		printf("\n 3- Manipular arquivos");
 		printf("\n:");
 		//printf("\n x- \n"); // Para novas funções
 		scanf("%d",&op);
@@ -500,6 +519,27 @@ int CallDextery(){ // EXECUTAR MENU DEXTERY
 				}
 				}while(subop != 0);
 			
+			case 3:
+				do{
+				printf("\n\nAgora você esta no submenu de Manipulação de Arquivos, favor, insira qual das aplicações disponíveis você deseja executar:\n");
+				printf("\n\n0- Voltar;\n1- Criar arquivos.txt;");
+				printf("\n:");
+				scanf("%d",&subop);
+				switch(subop){
+					case 0:
+						substop = 0;
+					break;
+					
+					case 1: // Criar Arquivo.txt
+						CreateTxTFile();
+					break;
+
+					default:
+						Warning();	
+				}
+				}while(subop != 0);
+				break;
+			
 			default:
 			Warning();
 		}
@@ -508,39 +548,82 @@ int CallDextery(){ // EXECUTAR MENU DEXTERY
 }
 
 
-/*PRINTS PARA INSERIR OPÇÕES DO SUBMENU
-				do{
-					printf("\nAgora você esta no submenu de x, favor, insira qual das aplicações disponíveis você deseja executar:\n");
-					printf("\n0- Sair;\n1- ;\n2- ;\n3- ;\n4- ;\n5- ;\n");
-					scanf("%d",&subop);
-					switch(subop){
-						case 0:
-							substop = 0;
-						break;
-						case 1:
-							
-						break;
-						case 2: // Para sub-sub rotinas (underop)
-							do{
-								printf("\nAgora você esta no submenu de x, favor, insira qual das aplicações disponíveis você deseja executar:\n");
-								printf("\n0- Sair;\n1- ;\n2- ;\n3- ;\n4- ;\n5- ;\n");
-								scanf("%d",&underop);
-								switch(underop){
-									case 0:
-										understop = 0;
-									case 1:
-										
-									break;
-							
-									default:
-										Warning();
-								}
-							}while(underop != 0);
-						break;
-						
-						default:
-							Warning();	
-					}
-				}while(subop != 0);
+/*PRINTS PARA INSERIR OPÇÕES DO MENU E SUBMENU*/
+
+
+/* --> Atualmente esta é a linha 554, assim, para as referências de linha abaixo, cheque com a atual desta linha, se difernte, altere pela diferença: n' = n + (x-554)
+		ABAIXO ENCONTRA-SE UM "ATALHO" PARA ADICIONAR AO MENU OUTROS CASES E OU SUBCASES, COM A IDENTAÇÃO E FECHAMENTO CORRETO
+*/ 
+
+
+/*int CallDextery(){ // EXECUTAR MENU DEXTERY
+	int stop = 1, substop = 1, understop = 1;
+	int op = 1, subop = 1, underop = 1;
+	SetPurtuguese();
+	do{
+		printf("\nBEM VINDO AO DEXTERY\n\nFavor, escolha uma opção válida no menu abaixo:\n");
+		printf("\n 0- Sair");
+		printf("\n 1- Configurações Iniciais Dextery");
+		printf("\n 2- Realizar operações Matemáticas");
+		printf("\n 3- Manipular arquivos");
+		printf("\n:");
+		//printf("\n x- \n"); // Para novas funções
+		scanf("%d",&op);
+		switch(op){
 */
+	
+	// COPIE ABAIXO, ENTRE AS LINHAS 26 E 78 PARA SELECIONAR TODA UMA CATEGORIA DO MENU. O DEFAULT DO SUBMENU ESTA NA LINHA 67, CASO NECESSITE ADICIONÁ-LO
+/* --- > INICIAL
+
+			case 2:
+				do{
+				printf("\n\nAgora você esta no submenu de x, favor, insira qual das aplicações disponíveis você deseja executar:\n");
+				printf("\n\n0- Voltar;\n1- ;\n2- ;\n3- ;\n4- ;");
+				printf("\n:");
+				scanf("%d",&subop);
+				switch(subop){
+					case 0:
+						substop = 0;
+					break;
+					
+					case 1: // Basic Call Case
+						
+					break;
+				
+	// COPIE ABAIXO, ENTRE AS LINHAS 31 E 48 PARA SELECIONAR TODA UMA SUBCATEGORIA DO MENU
+		
+					case 2: // Submenu Call Case
+						do{
+							printf("\n\nAgora você esta no submenu de x, favor, insira qual das aplicações disponíveis você deseja executar:\n");
+							printf("\n\n0- Voltar;\n1- ;\n2- ;\n3- ;\n4- ;");
+							scanf("%d",&underop);
+							switch(underop){
+								case 0:
+									understop = 0;
+									
+								case 1: // Basic Call SubCase
+									Showdate(Datetoday());	
+								break;
+								
+								default:
+									Warning();
+							}
+						}while(understop !=0);
+					break;
+
+					default:
+						Warning();	
+				}
+				}while(subop != 0);
+				break;
+
+ --- > FINAL */
+			
+			/*default:
+			Warning();
+		}
+	}while(op != 0);
+    return stop;
+}*/
+
 
