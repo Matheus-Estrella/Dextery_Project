@@ -424,6 +424,226 @@ float checktriangle(){
 	}
 }
 
+
+
+// abixo encontra-se o print para inserção de observações de novos módulos de funções (linhas 18 á 31)
+
+/*
+Resumo de funções apresentadas abaixo:
+
+ ----> Funções Principais:
+ 
+ 
+ 
+
+ ----> Funções Auxiliares:
+ 
+ 
+ 
+
+*/
+
+void ShowTemperature(float k, float c, float f){
+	printf("\n A temperatura em Celcius é de: %.3f",c);
+	printf("\n A temperatura em Fahrenheit é de: %.3f",f);
+	printf("\n A temperatura em Kelvin é de: %.3f",k);
+}
+
+int Asktemperature(int y){
+	int op1;
+	if( y == 1){
+		printf("\n\nQual será a temperatura a ser inserida?\n1- Celcius\n2- Fahrenheit\n3- Kelvin\n:");
+		scanf("%d",&op1);
+	}else if( y == 2){
+		printf("\n\nQual será a segunda temperatura a ser inserida?\n1- Celcius\n2- Fahrenheit\n3- Kelvin\n:");
+		scanf("%d",&op1);
+	}
+	return op1;
+}
+
+float TempCovert(int off, float temp,int saveconvert, int sigma){ // quatro funções em uma, para converter temperaturas
+/*
+
+off = se igual a zero, pergunta ao usuário qual temperatura quer converter em todas, se não, se Será utilizado a variável da função, para inserir uma variável temp
+	  retornando, assim, uma variável float de acordo com a unidade desejada em saveconvert
+	off = 1 -> Insere temp como Celsius
+	off = 2 -> Insere temp como Fahrenheit
+	off = 3 -> Insere temp como Kelvin
+	
+Temp = Temperatura que deve ser inserida para que possa converter a unidade off em unidade saveconvert, e retorná-la como um valor
+	
+saveconvert = utilizado para fazer que a função salve algum dos valores convertidos como uma variável de retorno float, o returnoperation
+	saveconvert = 1 ´> Retorna valor em Celsius
+	saveconvert = 1 ´> Retorna valor em Fahrenheit
+	saveconvert = 1 ´> Retorna valor em Kelvin
+	
+Sigma é apeans uma variável para fazer, de maneira recursiva, a função AskTemperature abaixo poder além de inserir uma equação, também poder chamar o conversor novamente.
+	Utilize-a como padrão 0
+*/
+	int op1;	
+	float k,c,f,kx,cx,fx, returnoperation = 0;
+	if(off == 0){
+		op1 = Asktemperature(1);
+	}else{
+		op1 = off;
+	}
+	switch(op1){
+		case 1:
+			if(off == 0){
+				printf("\nCelcius: ");
+				scanf("%f",&c);
+			}else{
+				c = temp;
+			}
+			kx = c +273;
+			fx = (c*1.8)+32;
+			if((off == 0)||(off == 5)||(sigma != 0)){ShowTemperature(kx,c,fx);}
+			else if(saveconvert == 1){
+				returnoperation = c;
+			}else if(saveconvert == 2){
+				returnoperation = fx;
+			}else if(saveconvert == 3){
+				returnoperation = kx;				
+			}
+			getchar();
+		break;
+		case 2:
+			if(off == 0){
+				printf("\nFahrenheit: ");
+				scanf("%f",&f);
+			}else{
+				f = temp;
+			}
+			kx = (((f-32)/9)*5)+273;
+			cx = ((f-32)/1.8);
+			if((off == 0)||(off == 5)||(sigma != 0)){ShowTemperature(kx,cx,f);}
+			else if(saveconvert == 1){
+				returnoperation = cx;
+			}else if(saveconvert == 2){
+				returnoperation = f;
+			}else if(saveconvert == 3){
+				returnoperation = kx;				
+			}
+			getchar();
+		break;
+		
+		case 3:
+			if(off == 0){
+				printf("\nKelvin: ");
+				scanf("%f",&k);
+			}else{
+				k = temp;
+			}
+			fx = (((k-273)/5)*9)+32;
+			cx = k -273;
+			if((off == 0)||(off == 5)||(sigma != 0)){ShowTemperature(k,cx,fx);}
+			else if(saveconvert == 1){
+				returnoperation = cx;
+			}else if(saveconvert == 2){
+				returnoperation = fx;
+			}else if(saveconvert == 3){
+				returnoperation = k;				
+			}
+			getchar();
+		break;
+		
+		default:
+			Warning();
+	}
+	if(sigma == 0){
+		return returnoperation;
+	}else{
+		TempCovert(sigma,temp,0,0);
+	}
+}
+float AskOperation(float temp1,float temp2, int calc1){
+	float result;
+	int op;
+	printf("\nDeseja realizar qual operação dentre os valores de temperatura 1 (%.3f) e temperatura 2 (%.3f)",temp1,temp2);
+	printf("\n1-	T1 + T2\n2-	T1 - T2\n3-	T2 * T2\n4-	T1 / T2\n:");
+	scanf("%d",&op);
+	switch(op){
+		case 1:
+			result = temp1 + temp2;
+			break;
+		case 2:
+			result = temp1 - temp2;
+			break;
+		case 3:
+			result = temp1 * temp2;
+			break;
+		case 4:
+			result = temp1 / temp2;
+			break;
+		default:
+			Warning();	
+	}
+	printf("\nO resultado é: %.3f ",result);
+	if(calc1 == 1){
+		printf("Celcius\n");
+	}else if(calc1 == 2){
+		printf("nFahrenheit\n");
+	}else if(calc1 == 3){
+		printf("Kelvin\n");
+	}
+	return result;
+}
+void CalculateTemperatures(){
+	float t1,t2;
+	int op;
+	float c, f, k,result;
+	int calc1,calc2;
+	calc1 = Asktemperature(1);
+	printf("\nInsira o valor: ");
+	scanf("%f",&t1);
+	calc2 = Asktemperature(2);
+	printf("\nInsira o valor: ");
+	scanf("%f",&t2);
+	getchar();
+	if( calc1 != calc2){
+		if(calc1 == 1){ // C
+			if(calc2 == 2){
+				t2 = TempCovert(2,t2,1,0);
+			}
+			if(calc2 == 3){
+				t2 = TempCovert(3, t2,1,0);
+			}
+		}
+		if(calc1 == 2){ // F
+			if(calc2 == 1){
+				t2 = TempCovert(1, t2,2,0);
+			}
+			if(calc2 == 3){
+				t2 = TempCovert(3, t2,2,0);
+			}
+		}
+		if(calc1 == 3){ // K
+			if(calc2 == 2){
+				t2 = TempCovert(2, t2,3,0);
+			}
+			if(calc2 == 1){
+				t2 = TempCovert(1, t2,3,0);
+			}
+		}
+	}
+	result = AskOperation(t1,t2,calc1);
+	printf("\nDeseja converter este valor entre outras unidades?\n1-Sim\n2-Não\nR_: ");
+	scanf("%d",&op);
+	if(op == 1){
+		TempCovert(calc1,result,0,calc1);
+	}
+	
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+/*
+  ___        _  _  ___   ___       _              _  _   / /    \ \   
+ / __| __ _ | || ||   \ | __|__ __| |_  ___  _ _ | || | | |      | |  
+| (__ / _` || || || |) || _| \ \ /|  _|/ -_)| '_| \_. | | |      | |  
+ \___|\__/_||_||_||___/ |___|/_\_\ \__|\___||_|   |__/   \_\_   /_/   
+
+*/
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -478,7 +698,7 @@ int CallDextery(){ // EXECUTAR MENU DEXTERY
 			case 2:
 				do{
 				printf("\n\nAgora você esta no submenu de Realizar operações Matemáticas, favor, insira qual das aplicações disponíveis você deseja executar:\n");
-				printf("\n\n0- Voltar;\n1- Checagem de triângulos;\n2- Calcular entre datas");
+				printf("\n\n0- Voltar;\n1- Checagem de triângulos;\n2- Operações com datas;\n3- Calcular Temperaturas;");
 				printf("\n:");
 				scanf("%d",&subop);
 				switch(subop){
@@ -494,7 +714,7 @@ int CallDextery(){ // EXECUTAR MENU DEXTERY
 					case 2: // Para sub-sub manipulação de datas
 						do{
 							printf("\n\nAgora você esta no submenu de manipulação de datas, favor, insira qual das aplicações disponíveis você deseja executar:\n");
-							printf("\n\n0- Voltar;\n1- Mostrar dia atual;\n2- Calcular datas;\n");
+							printf("\n\n0- Voltar;\n1- Mostrar dia atual;\n2- Calcular datas;\n:");
 							scanf("%d",&underop);
 							switch(underop){
 								case 0:
@@ -506,6 +726,33 @@ int CallDextery(){ // EXECUTAR MENU DEXTERY
 									
 								case 2: // Calcular entre datas
 									Printbetween(Betweendates());
+								break;
+								
+								default:
+									Warning();
+							}
+						}while(understop !=0);
+					break;
+					
+					case 3: // Submenu Temperaturas
+						do{
+							printf("\n\nAgora você esta no submenu de Operações com Temperaturas, favor, insira qual das aplicações disponíveis você deseja executar:\n");
+							printf("\n\n0- Voltar;\n1- Operações aritméticas entre duas temperaturas;\n2- Converter uma temperatura em todas unidades de medida;\n:");
+							scanf("%d",&underop);
+							switch(underop){
+								case 0:
+									understop = 0;
+									
+								case 1: 
+									CalculateTemperatures();
+									getchar();
+									fflush(stdin);
+								break;
+								
+								case 2:
+									TempCovert(0,0,0,0);
+									getchar();
+									fflush(stdin);
 								break;
 								
 								default:
@@ -596,13 +843,14 @@ int CallDextery(){ // EXECUTAR MENU DEXTERY
 						do{
 							printf("\n\nAgora você esta no submenu de x, favor, insira qual das aplicações disponíveis você deseja executar:\n");
 							printf("\n\n0- Voltar;\n1- ;\n2- ;\n3- ;\n4- ;");
+							printf("\n: ");
 							scanf("%d",&underop);
 							switch(underop){
 								case 0:
 									understop = 0;
 									
 								case 1: // Basic Call SubCase
-									Showdate(Datetoday());	
+									//Showdate(Datetoday());	
 								break;
 								
 								default:
