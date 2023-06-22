@@ -4,10 +4,7 @@
 #include"Dextery().h"
 
 int main(){
-	int ret;
-	do{
-		ret = CallDextery();
-	}while(ret != 0);
+	WakeDexter();
 	return 0;
 }
 
@@ -874,4 +871,9 @@ int CallDextery(){ // EXECUTAR MENU DEXTERY
     return stop;
 }*/
 
-
+void WakeDexter(){
+	int ret;
+	do{
+		ret = CallDextery();
+	}while(ret != 0);
+}
