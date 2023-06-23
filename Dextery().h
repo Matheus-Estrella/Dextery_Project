@@ -10,7 +10,7 @@ int main(){
 
 */
 
-// abixo encontra-se o print para inserção de observações de novos módulos de funções (linhas 18 á 31)
+// abixo encontra-se o print para inserção de observações de novos módulos de funções (linhas 15 á 31)
 
 /*
 Resumo de funções apresentadas abaixo:
@@ -56,13 +56,13 @@ Resumo de funções apresentadas abaixo: Funções Universais Dextery()
  
 */
 
-void SetPurtuguese(){
+void SetPortuguese(){
 	setlocale(LC_ALL, "Portuguese");
 	system("pause");
 }
 
 void SetConfigs(){ 
-	SetPurtuguese();
+	SetPortuguese();
 }
 
 void Warning(){
@@ -422,21 +422,17 @@ float checktriangle(){
 }
 
 
-
-// abixo encontra-se o print para inserção de observações de novos módulos de funções (linhas 18 á 31)
-
 /*
-Resumo de funções apresentadas abaixo:
+Resumo de funções apresentadas abaixo: MANIPULAÇÕES COM TEMPERATURA.
 
  ----> Funções Principais:
- 
- 
- 
+ 	CalculateTemperature() = Calcula temperaturas;
 
  ----> Funções Auxiliares:
- 
- 
- 
+ 	ShowTemperature(float k, float c, float f) = imprime as temperaturas em suas unidades k, c, f
+ 	Asktemperature(int y) = Pergunta uma temperatura (y=1), ou uma segunda se y = 2
+ 	TempCovert(int off, float temp,int saveconvert, int sigma){ = quatro funções em uma, para converter temperaturas
+ 	AskOperation(float temp1,float temp2, int calc1);
 
 */
 
@@ -632,6 +628,235 @@ void CalculateTemperatures(){
 	
 }
 
+/*
+Resumo de funções apresentadas abaixo: Jogo HangedMan();
+
+ ----> Funções Principais:
+ 
+ 
+ 
+
+ ----> Funções Auxiliares:
+ 
+ 
+ 
+
+*/
+
+#define MAX_PALAVRAS 1000
+#define MAX_TAMANHO_PALAVRA 50
+
+int CarregarPalavras(char palavras[][MAX_TAMANHO_PALAVRA]) {
+    FILE* arquivo = fopen("hangwords.txt", "r");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo de palavras.\n");
+        return 0;
+    }
+
+    int indice = 0;
+    char linha[MAX_TAMANHO_PALAVRA];
+
+    while (fgets(linha, MAX_TAMANHO_PALAVRA, arquivo) != NULL) {
+        // Remover a quebra de linha do final da linha
+        linha[strcspn(linha, "\n")] = '\0';
+
+        strncpy(palavras[indice], linha, MAX_TAMANHO_PALAVRA);
+        indice++;
+    }
+
+    fclose(arquivo);
+    return indice;
+}
+
+void CarregarDicas(char dicas[][MAX_TAMANHO_PALAVRA]) {
+    FILE* arquivo = fopen("passwordtip.txt", "r");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo de dicas.\n");
+        return;
+    }
+
+    int indice = 0;
+    char linha[MAX_TAMANHO_PALAVRA];
+
+    while (fgets(linha, MAX_TAMANHO_PALAVRA, arquivo) != NULL) {
+        // Remover a quebra de linha do final da linha
+        linha[strcspn(linha, "\n")] = '\0';
+
+        strncpy(dicas[indice], linha, MAX_TAMANHO_PALAVRA);
+        indice++;
+    }
+
+    fclose(arquivo);
+}
+
+void HangedMan() {
+	int ImmortalOp;
+	int vidas;
+    char palavras[MAX_PALAVRAS][MAX_TAMANHO_PALAVRA];
+    char dicas[MAX_PALAVRAS][MAX_TAMANHO_PALAVRA];
+
+    int numPalavras = CarregarPalavras(palavras);
+    CarregarDicas(dicas);
+
+    // Geração de número aleatório para escolher a palavra
+    srand(time(NULL));
+    int indicePalavra = rand() % numPalavras;
+    char palavraEscolhida[MAX_TAMANHO_PALAVRA];
+    strncpy(palavraEscolhida, palavras[indicePalavra], MAX_TAMANHO_PALAVRA);
+
+    int numTentativas = strlen(palavraEscolhida) + 5;
+    printf("\nDeseja jogar no modo treinamento?\n1- Sim\n2- Não\n");
+    scanf("%d",&ImmortalOp);
+    if(ImmortalOp == 1){
+    	vidas = 1000;
+	}else{
+		vidas = numTentativas;
+	}
+     
+    // Letras ocultas
+    char letrasOcultas[MAX_TAMANHO_PALAVRA];
+    for (int i = 0; i < strlen(palavraEscolhida); i++) {
+        letrasOcultas[i] = '+';
+    }
+    letrasOcultas[strlen(palavraEscolhida)] = '\0';
+
+    // Histórico de letras digitadas
+    char letrasUtilizadas[MAX_TAMANHO_PALAVRA];
+    letrasUtilizadas[0] = '\0';
+
+    printf("Bem-vindo ao jogo da forca!\n");
+
+    while (vidas > 0 && strcmp(letrasOcultas, palavraEscolhida) != 0) {
+        printf("\nVidas: %d\n", vidas);
+                printf("Letras ocultas: %s\n", letrasOcultas);
+        printf("Dica: %s\n", dicas[indicePalavra]);
+        printf("Histórico de letras digitadas: %s\n", letrasUtilizadas);
+        printf("Nº Letras: %d\n", (int)strlen(palavraEscolhida));
+
+        char letra;
+        printf("Digite uma letra: ");
+        scanf(" %c", &letra);
+
+        // Limpar o buffer do teclado
+        while (getchar() != '\n')
+            continue;
+
+        // Verificar se a letra já foi utilizada
+        if (strchr(letrasUtilizadas, letra) != NULL) {
+            printf("Você já digitou essa letra. Tente novamente.\n");
+            continue;
+        }
+
+        // Adicionar a letra ao histórico de letras digitadas
+        int tamanhoHistorico = strlen(letrasUtilizadas);
+        letrasUtilizadas[tamanhoHistorico] = letra;
+        letrasUtilizadas[tamanhoHistorico + 1] = '\0';
+
+        // Verificar se a letra está presente na palavra
+        int letraEncontrada = 0;
+        for (int i = 0; i < strlen(palavraEscolhida); i++) {
+            if (palavraEscolhida[i] == letra) {
+                letrasOcultas[i] = letra;
+                letraEncontrada = 1;
+            }
+        }
+
+        if (letraEncontrada) {
+            printf("Letra correta!\n");
+        } else {
+            printf("Letra incorreta!\n");
+            vidas--;
+        }
+    }
+
+    if (vidas == 0) {
+        printf("\nVocê perdeu! A palavra era: %s\n", palavraEscolhida);
+    } else {
+        printf("\nParabéns! Você venceu! A palavra era: %s\n", palavraEscolhida);
+    }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+void createHangedManFiles() {
+    FILE *hangWordsFile = fopen("hangwords.txt", "a");
+    FILE *passwordTipFile = fopen("passwordtip.txt", "a");
+
+    if (hangWordsFile == NULL || passwordTipFile == NULL) {
+        printf("Erro ao abrir os arquivos.\n");
+        exit(1);
+    }
+
+    fclose(hangWordsFile);
+    fclose(passwordTipFile);
+}
+
+void writeWordsToFile() {
+    char hangWord[100];
+    char passwordTip[100];
+    char resposta[5];
+
+    FILE *hangWordsFile = fopen("hangwords.txt", "a");
+    FILE *passwordTipFile = fopen("passwordtip.txt", "a");
+
+    if (hangWordsFile == NULL || passwordTipFile == NULL) {
+        printf("Erro ao abrir os arquivos.\n");
+        exit(1);
+    }
+
+    do {
+        printf("Digite a palavra para o arquivo hangwords.txt: ");
+        getchar();
+        fgets(hangWord, sizeof(hangWord), stdin);
+        hangWord[strcspn(hangWord, "\n")] = '\0'; // Remover o caractere de nova linha
+
+        printf("Digite a palavra para o arquivo passwordtip.txt: ");
+        fgets(passwordTip, sizeof(passwordTip), stdin);
+        passwordTip[strcspn(passwordTip, "\n")] = '\0'; // Remover o caractere de nova linha
+
+        fprintf(hangWordsFile, "%s\n", hangWord);
+        fprintf(passwordTipFile, "%s\n", passwordTip);
+
+        printf("Palavras adicionadas aos arquivos com sucesso.\n");
+
+        printf("Deseja adicionar outra palavra? (Sim/Nao): ");
+        scanf("%s", resposta);
+    } while (strcmp(resposta, "Sim") == 0 || strcmp(resposta, "sim") == 0);
+
+    fclose(hangWordsFile);
+    fclose(passwordTipFile);
+}
+
+
+void PlayHangedMan() {
+    int option;
+
+    do {
+        printf("\nMenu:\n");
+        printf("1. Adicionar palavras ao jogo\n");
+        printf("2. Jogar o jogo da forca\n");
+        printf("3. Sair\n");
+        printf("Escolha uma opção: ");
+        scanf("%d", &option);
+
+        switch (option) {
+            case 1:
+                createHangedManFiles();
+                writeWordsToFile();
+                break;
+            case 2:
+                HangedMan();
+                break;
+            case 3:
+                printf("Saindo...\n");
+                break;
+            default:
+                printf("Opção inválida. Tente novamente.\n");
+        }
+    } while (option != 3);
+}
+
+
+
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 /*
@@ -651,13 +876,14 @@ void CalculateTemperatures(){
 int CallDextery(){ // EXECUTAR MENU DEXTERY
 	int stop = 1, substop = 1, understop = 1;
 	int op = 1, subop = 1, underop = 1;
-	SetPurtuguese();
+	SetPortuguese();
 	do{
 		printf("\nBEM VINDO AO DEXTERY\n\nFavor, escolha uma opção válida no menu abaixo:\n");
 		printf("\n 0- Sair");
 		printf("\n 1- Configurações Iniciais Dextery");
 		printf("\n 2- Realizar operações Matemáticas");
 		printf("\n 3- Manipular arquivos");
+		printf("\n 4- Menu de jogos");
 		printf("\n:");
 		//printf("\n x- \n"); // Para novas funções
 		scanf("%d",&op);
@@ -683,7 +909,7 @@ int CallDextery(){ // EXECUTAR MENU DEXTERY
 					break;
 					
 					case 2: // Configurar Idioma Português (PT)
-						SetPurtuguese();
+						SetPortuguese();
 					break;
 					
 					default:
@@ -776,6 +1002,27 @@ int CallDextery(){ // EXECUTAR MENU DEXTERY
 					
 					case 1: // Criar Arquivo.txt
 						CreateTxTFile();
+					break;
+
+					default:
+						Warning();	
+				}
+				}while(subop != 0);
+				break;
+			
+			case 4:
+				do{
+				printf("\n\nAgora você esta no submenu de Jogos, favor, insira qual das aplicações disponíveis você deseja executar:\n");
+				printf("\n\n0- Voltar;\n1- Forca;");
+				printf("\n:");
+				scanf("%d",&subop);
+				switch(subop){
+					case 0:
+						substop = 0;
+					break;
+					
+					case 1: 
+						PlayHangedMan();
 					break;
 
 					default:
